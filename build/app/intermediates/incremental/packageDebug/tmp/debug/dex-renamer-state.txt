@@ -1,0 +1,4 @@
+#Sat Jan 05 15:02:35 PET 2019
+base.0=/home/ailton/GitClones/WordToSenteces-app/build/app/intermediates/transforms/dexMerger/debug/0
+path.0=classes.dex
+renamed.0=classes.dex
