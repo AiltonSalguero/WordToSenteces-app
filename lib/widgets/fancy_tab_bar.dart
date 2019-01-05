@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'tab_item.dart';
 import 'package:vector_math/vector_math.dart' as vector;
 
+import '../main.dart';
+
 class FancyTabBar extends StatefulWidget {
   @override
   _FancyTabBarState createState() => _FancyTabBarState();
@@ -86,6 +88,8 @@ class _FancyTabBarState extends State<FancyTabBar>
                   iconData: Icons.home,
                   title: "HOME",
                   callbackFunction: () {
+                    //Navigator.of(context).pushNamed('/sentences');
+                    MyApp.homePageKey.currentState.tabBarController.animateTo(0);
                     setState(() {
                       nextIcon = Icons.home;
                       currentSelected = 0;
@@ -97,6 +101,8 @@ class _FancyTabBarState extends State<FancyTabBar>
                   iconData: Icons.search,
                   title: "SEARCH",
                   callbackFunction: () {
+                    //Navigator.of(context).pushNamed('/search');
+                    MyApp.homePageKey.currentState.tabBarController.animateTo(1);
                     setState(() {
                       nextIcon = Icons.search;
                       currentSelected = 1;
@@ -105,9 +111,11 @@ class _FancyTabBarState extends State<FancyTabBar>
                   }),
               TabItem(
                   selected: currentSelected == 2,
-                  iconData: Icons.person,
-                  title: "USER",
+                  iconData: Icons.star,
+                  title: "FAVORITE",
                   callbackFunction: () {
+                    //Navigator.of(context).pushNamed('/favorites');
+                    MyApp.homePageKey.currentState.tabBarController.animateTo(2);
                     setState(() {
                       nextIcon = Icons.person;
                       currentSelected = 2;

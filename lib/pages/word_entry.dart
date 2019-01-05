@@ -10,12 +10,10 @@ class WordEntryPage extends StatefulWidget {
 class _WordEntryPageState extends State<WordEntryPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Text("data"),
+    return Center(
+      child: Container(
+        child: Text("words"),
       ),
-
-      bottomNavigationBar: FancyTabBar(),
     );
   }
 }
