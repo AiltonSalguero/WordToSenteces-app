@@ -75,10 +75,13 @@ class _FancyTabBarState extends State<FancyTabBar>
         Container(
           height: 65,
           margin: EdgeInsets.only(top: 45),
-          decoration: BoxDecoration(color: Colors.white, boxShadow: [
-            BoxShadow(
-                color: Colors.black12, offset: Offset(0, -1), blurRadius: 8)
-          ]),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black12, offset: Offset(0, -1), blurRadius: 8)
+            ],
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,7 +92,8 @@ class _FancyTabBarState extends State<FancyTabBar>
                   title: "Home",
                   callbackFunction: () {
                     //Navigator.of(context).pushNamed('/sentences');
-                    MyApp.homePageKey.currentState.tabBarController.animateTo(0);
+                    MyApp.homePageKey.currentState.tabBarController
+                        .animateTo(0);
                     setState(() {
                       nextIcon = Icons.mode_edit;
                       currentSelected = 0;
@@ -102,7 +106,8 @@ class _FancyTabBarState extends State<FancyTabBar>
                   title: "Sentences",
                   callbackFunction: () {
                     //Navigator.of(context).pushNamed('/search');
-                    MyApp.homePageKey.currentState.tabBarController.animateTo(1);
+                    MyApp.homePageKey.currentState.tabBarController
+                        .animateTo(1);
                     setState(() {
                       nextIcon = Icons.toc;
                       currentSelected = 1;
@@ -114,7 +119,8 @@ class _FancyTabBarState extends State<FancyTabBar>
                   iconData: Icons.favorite,
                   title: "Favorites",
                   callbackFunction: () {
-                    MyApp.homePageKey.currentState.tabBarController.animateTo(2);
+                    MyApp.homePageKey.currentState.tabBarController
+                        .animateTo(2);
                     setState(() {
                       nextIcon = Icons.favorite;
                       currentSelected = 2;
@@ -148,8 +154,11 @@ class _FancyTabBarState extends State<FancyTabBar>
                                   decoration: BoxDecoration(
                                       color: Colors.white,
                                       shape: BoxShape.circle,
-                                      boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)])
-                              ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Colors.black12,
+                                            blurRadius: 8)
+                                      ])),
                             ),
                           )),
                     ),

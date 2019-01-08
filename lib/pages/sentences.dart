@@ -8,16 +8,15 @@ class SentencesPage extends StatefulWidget {
 }
 
 class SentencesPageState extends State<SentencesPage> {
+  /// Current word
   String _word = WordEntryPageState.word;
+
+  /// Contains all the saved sentences
+  final _favoriteSentences = Set<Sentence>();
 
   @override
   void initState() {
     super.initState();
-  }
-
-  static void update() {
-    setState() {}
-    ;
   }
 
   @override
@@ -36,25 +35,16 @@ class SentencesPageState extends State<SentencesPage> {
               ? Center(
                   child: CircularProgressIndicator(),
                 )
-              :
-              // : GridView.count(
-              //     shrinkWrap: true,
-              //     crossAxisCount: 1,
-              //     padding: EdgeInsets.all(2.0),
-              //     childAspectRatio: 6,
-              //     children: WordEntryPageState.sentencesExample.sentence
-              //         .map((sen) => _buildTextRow(sen))
-              //         .toList(),
-              //   ),
-              Flexible(
+              : Flexible(
                   child: Container(
-                  child: ListView.builder(
-                    itemCount: WordEntryPageState.sentencesExample.length(),
-                    itemBuilder: (_, index) => _buildTextRow(
-                          WordEntryPageState.sentencesExample.sentence[index],
-                        ),
+                    child: ListView.builder(
+                      itemCount: WordEntryPageState.sentencesExample.length(),
+                      itemBuilder: (_, index) => _buildTextRow(
+                            WordEntryPageState.sentencesExample.sentence[index],
+                          ),
+                    ),
                   ),
-                )),
+                ),
         )
       ],
     );
@@ -66,25 +56,54 @@ class SentencesPageState extends State<SentencesPage> {
         left: 12,
         right: 16,
       ),
-      child: Card(
-        elevation: 3,
-        child: Row(
-          children: <Widget>[
-            Text(
-              sen.text.toString(),
-              style: TextStyle(
-                fontSize: 20.0,
-              ),
+      // child: Card(
+      //   margin: EdgeInsets.all(8),
+      //   elevation: 3,
+      //   child: Container(
+      //     margin: EdgeInsets.all(16),
+      //     child: Text(
+      //       sen.text.toString(),
+      //       style: TextStyle(
+      //         fontSize: 20.0,
+      //       ),
+      //     ),
+      //   ),
+      // ),
+      child: ListTile(
+        subtitle: _showRegions(sen),
+        title: Container(
+          child: Text(
+            sen.text.toString(),
+            style: TextStyle(
+              fontSize: 20.0,
             ),
-            Container(
-              alignment: FractionalOffset(0.95, 0),
-              child: Icon(
-                Icons.favorite_border,
-              ),
-            ),
-          ],
+          ),
         ),
+        trailing: _showFavIcon(_favoriteSentences.contains(sen)),
       ),
     );
   }
+
+  Widget _showRegions(Sentence sen) {
+    String regions = "";
+    for (var region in sen.regions) {
+      regions += region;
+    }
+    return Text("Regions: $regions");
+  }
+
+  Widget _showFavIcon(bool isFavorite) {
+    // Blank or red
+    return Icon(
+      isFavorite ? Icons.favorite : Icons.favorite_border,
+      color: isFavorite ? Colors.red : null,
+    );
+  }
 }
+
+// Container(
+//           alignment: FractionalOffset(0.95, 0),
+//           child: Icon(
+//             Icons.favorite_border,
+//           ),
+//         ),

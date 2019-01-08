@@ -20,10 +20,11 @@ class HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController tabBarController;
   String word = "";
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-          child: Scaffold(
+      child: Scaffold(
         body: TabBarView(
           controller: tabBarController,
           children: <Widget>[
