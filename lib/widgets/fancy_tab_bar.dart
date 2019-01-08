@@ -85,39 +85,38 @@ class _FancyTabBarState extends State<FancyTabBar>
             children: <Widget>[
               TabItem(
                   selected: currentSelected == 0,
-                  iconData: Icons.home,
-                  title: "HOME",
+                  iconData: Icons.mode_edit,
+                  title: "Home",
                   callbackFunction: () {
                     //Navigator.of(context).pushNamed('/sentences');
                     MyApp.homePageKey.currentState.tabBarController.animateTo(0);
                     setState(() {
-                      nextIcon = Icons.home;
+                      nextIcon = Icons.mode_edit;
                       currentSelected = 0;
                     });
                     _initAnimationAndStart(_positionAnimation.value, -1);
                   }),
               TabItem(
                   selected: currentSelected == 1,
-                  iconData: Icons.search,
-                  title: "SEARCH",
+                  iconData: Icons.toc,
+                  title: "Sentences",
                   callbackFunction: () {
                     //Navigator.of(context).pushNamed('/search');
                     MyApp.homePageKey.currentState.tabBarController.animateTo(1);
                     setState(() {
-                      nextIcon = Icons.search;
+                      nextIcon = Icons.toc;
                       currentSelected = 1;
                     });
                     _initAnimationAndStart(_positionAnimation.value, 0);
                   }),
               TabItem(
                   selected: currentSelected == 2,
-                  iconData: Icons.star,
-                  title: "FAVORITE",
+                  iconData: Icons.favorite,
+                  title: "Favorites",
                   callbackFunction: () {
-                    //Navigator.of(context).pushNamed('/favorites');
                     MyApp.homePageKey.currentState.tabBarController.animateTo(2);
                     setState(() {
-                      nextIcon = Icons.person;
+                      nextIcon = Icons.favorite;
                       currentSelected = 2;
                     });
                     _initAnimationAndStart(_positionAnimation.value, 1);

@@ -6,6 +6,8 @@ import 'package:sentence/pages/sentences.dart';
 import 'package:sentence/widgets/fancy_tab_bar.dart';
 import 'package:sentence/widgets/tab_item.dart';
 
+import 'package:sentence/model/sentence.dart';
+
 class HomePage extends StatefulWidget {
   /// Aniade una tributo "key" a HomePage
   HomePage({Key key}) : super(key: key);
@@ -17,18 +19,21 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController tabBarController;
+  String word = "";
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: TabBarView(
-        controller: tabBarController,
-        children: <Widget>[
-          WordEntryPage(),
-          SentencesPage(),
-          FavoritesPage(),
-        ],
+    return SafeArea(
+          child: Scaffold(
+        body: TabBarView(
+          controller: tabBarController,
+          children: <Widget>[
+            WordEntryPage(),
+            SentencesPage(),
+            FavoritesPage(),
+          ],
+        ),
+        bottomNavigationBar: FancyTabBar(),
       ),
-      bottomNavigationBar: FancyTabBar(),
     );
   }
 
