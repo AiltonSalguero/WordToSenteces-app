@@ -16,50 +16,74 @@ class WordEntryPage extends StatefulWidget {
 class WordEntryPageState extends State<WordEntryPage> {
   static SentencesExample sentencesExample;
 
-  static String word = "";
+  static String currentWord = "";
+  static String lexicalCategory = "";
 
   bool _isComposing = false;
   final _textController = TextEditingController();
 
-  void _searchSentences() {}
-
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Flexible(
-              child: TextField(
-                controller: _textController,
-                onSubmitted: _handleSubmitted,
-                onChanged: _handleMessageChanged,
-                decoration: InputDecoration(
-                  hintText: "Search...",
-                  contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Text(
+          "Search...",
+          style: TextStyle(
+            fontSize: 64,
+          ),
+        ),
+        Text(
+          "in",
+          style: TextStyle(
+            fontSize: 48,
+          ),
+        ),
+        Text(
+          "Oxford",
+          style: TextStyle(
+            fontSize: 72,
+          ),
+        ),
+        Text(
+          "Dictionary",
+          style: TextStyle(
+            fontSize: 72,
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Flexible(
+                child: TextField(
+                  controller: _textController,
+                  onSubmitted: _handleSubmitted,
+                  onChanged: _handleMessageChanged,
+                  decoration: InputDecoration(
+                    hintText: "Search...",
+                    contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: 4.0,
+              Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: 4.0,
+                ),
+                child: IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: _isComposing
+                      ? () => _getDataFromUrl(_textController.text)
+                      : null,
+                ),
               ),
-              child: IconButton(
-                icon: Icon(Icons.search),
-                onPressed: _isComposing
-                    ? () => _getDataFromUrl(_textController
-                        .text) //_handleSubmitted(_textController.text)
-                    : null,
-                //onPressed: _textController.text.toString().isEmpty ? () => print("yes") : null,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -79,12 +103,16 @@ class WordEntryPageState extends State<WordEntryPage> {
     print(response.body);
     print(decodedData['results'][0]['lexicalEntries'][0]);
 
+    MyApp.homePageKey.currentState.tabBarController.animateTo(1);
+
     sentencesExample = SentencesExample.fromJson(
         decodedData['results'][0]['lexicalEntries'][0]);
-    
 
-    MyApp.homePageKey.currentState.tabBarController.animateTo(1);
-    word = _textController.text;
+    String curWord = _textController.text;
+    currentWord = curWord[0].toUpperCase() + curWord.substring(1);
+    lexicalCategory =
+        decodedData['results'][0]['lexicalEntries'][0]['lexicalCategory'];
+
     _textController.clear();
 
     setState(() {
@@ -93,9 +121,9 @@ class WordEntryPageState extends State<WordEntryPage> {
   }
 
   String _urlWithSentencesOf(word) {
+    // Word id is case sensitive and lowercase is required
     final String language = "en";
-    final wordToLowerCase = word
-        .toLowerCase(); //word id is case sensitive and lowercase is required
+    final wordToLowerCase = word.toLowerCase();
     return "https://od-api.oxforddictionaries.com:443/api/v1/entries/" +
         language +
         "/" +
@@ -107,7 +135,7 @@ class WordEntryPageState extends State<WordEntryPage> {
     MyApp.homePageKey.currentState.tabBarController.animateTo(1);
 
     //_getDataFromUrl(_urlWithSentencesOf(_textController.text));
-    word = _textController.text;
+    currentWord = _textController.text;
     _textController.clear();
 
     setState(() {

@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:sentence/pages/word_entry.dart';
 import 'package:sentence/pages/favorites.dart';
 import 'package:sentence/pages/sentences.dart';
-import 'package:sentence/widgets/fancy_tab_bar.dart';
-import 'package:sentence/widgets/tab_item.dart';
+import '../data/db_helper.dart';
+import '../main.dart';
 
 import 'package:sentence/model/sentence.dart';
+
+import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 
 class HomePage extends StatefulWidget {
   /// Aniade una tributo "key" a HomePage
@@ -21,6 +23,9 @@ class HomePageState extends State<HomePage>
   TabController tabBarController;
   String word = "";
 
+  static var favoriteSentences = List<Sentence>();
+  final dbHelper = DBHelper();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -33,13 +38,26 @@ class HomePageState extends State<HomePage>
             FavoritesPage(),
           ],
         ),
-        bottomNavigationBar: FancyTabBar(),
+        
+        bottomNavigationBar: FancyBottomNavigation(
+          
+          tabs: [
+            TabData(iconData: Icons.mode_edit, title: "Home"),
+            TabData(iconData: Icons.toc, title: "Sentences"),
+            TabData(iconData: Icons.favorite, title: "Favorites")
+          ],
+          onTabChangedListener: (position) => _navigateTo(position),
+        ),
       ),
     );
   }
 
   @override
   void initState() {
+    dbHelper.getSentences().then((favs) {
+      favoriteSentences = favs;
+    });
+
     super.initState();
     tabBarController = TabController(
       vsync: this,
@@ -51,5 +69,11 @@ class HomePageState extends State<HomePage>
   void dispose() {
     tabBarController.dispose();
     super.dispose();
+  }
+
+  void _navigateTo(int pos) {
+    setState(() {
+      MyApp.homePageKey.currentState.tabBarController.animateTo(pos);
+    });
   }
 }

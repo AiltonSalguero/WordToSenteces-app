@@ -17,7 +17,7 @@ class SentencesExample {
     // Converts data to JSON
     final data = Map<String, dynamic>();
     if (this.sentence != null) {
-      data['sentence'] = this.sentence.map((sen) => sen.toJson()).toList();
+      data['sentence'] = this.sentence.map((sen) => sen.toMap()).toList();
     }
   }
 
@@ -27,24 +27,23 @@ class SentencesExample {
 }
 
 class Sentence {
-  List regions;
-  List senselds;
+  int id;
+  String regions;
   String text;
 
-  Sentence(this.regions, this.senselds, this.text);
+  Sentence(this.regions, this.text);
 
   Sentence.fromJson(Map<String, dynamic> json) {
     // Gets data from JSON
-    regions = json['regions'];
-    senselds = json['senselds'];
+    List<dynamic> regionsList = json['regions']; // Converts list to string
+    regions = regionsList.join(', ');
     text = json['text'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     // Converts data to JSON
     final data = Map<String, dynamic>();
     data['regions'] = this.regions;
-    data['senselds'] = this.senselds;
     data['text'] = this.text;
 
     return data;
