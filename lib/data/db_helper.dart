@@ -7,13 +7,16 @@ import 'package:sentence/model/sentence.dart';
 
 class DBHelper {
   final String tableName = "Sentence";
-  static Database db_instance;
+  static Database dbInstance;
+
+  static var favoriteSentences = List<Sentence>();
 
   Future<Database> get db async {
-    if (db_instance == null) db_instance = await initDB();
-    return db_instance;
+    if (dbInstance == null) dbInstance = await initDB();
+    return dbInstance;
   }
 
+  /// Creates a Data Base
   initDB() async {
     io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "SentencesDB.db");

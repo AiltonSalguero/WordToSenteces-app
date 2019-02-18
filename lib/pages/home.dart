@@ -6,8 +6,6 @@ import 'package:sentence/pages/sentences.dart';
 import '../data/db_helper.dart';
 import '../main.dart';
 
-import 'package:sentence/model/sentence.dart';
-
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,10 +18,8 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
+  
   TabController tabBarController;
-  String word = "";
-
-  static var favoriteSentences = List<Sentence>();
   final dbHelper = DBHelper();
 
   @override
@@ -31,6 +27,7 @@ class HomePageState extends State<HomePage>
     return SafeArea(
       child: Scaffold(
         body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
           controller: tabBarController,
           children: <Widget>[
             WordEntryPage(),
@@ -38,13 +35,20 @@ class HomePageState extends State<HomePage>
             FavoritesPage(),
           ],
         ),
-        
         bottomNavigationBar: FancyBottomNavigation(
-          
           tabs: [
-            TabData(iconData: Icons.mode_edit, title: "Home"),
-            TabData(iconData: Icons.toc, title: "Sentences"),
-            TabData(iconData: Icons.favorite, title: "Favorites")
+            TabData(
+              iconData: Icons.mode_edit,
+              title: "Home",
+            ),
+            TabData(
+              iconData: Icons.toc,
+              title: "Sentences",
+            ),
+            TabData(
+              iconData: Icons.favorite,
+              title: "Favorites",
+            )
           ],
           onTabChangedListener: (position) => _navigateTo(position),
         ),
@@ -55,7 +59,7 @@ class HomePageState extends State<HomePage>
   @override
   void initState() {
     dbHelper.getSentences().then((favs) {
-      favoriteSentences = favs;
+      DBHelper.favoriteSentences = favs;
     });
 
     super.initState();

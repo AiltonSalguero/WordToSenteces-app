@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:sentence/data/api_helper.dart';
+import 'package:sentence/main.dart';
 
 import 'package:sentence/pages/word_entry.dart';
 import 'package:sentence/model/sentence.dart';
 
 import 'package:sentence/data/db_helper.dart';
-
-import 'home.dart';
+import 'package:sentence/util/loader.dart';
 
 class SentencesPage extends StatefulWidget {
   SentencesPageState createState() => SentencesPageState();
 }
 
 class SentencesPageState extends State<SentencesPage> {
-  String _currentWord = WordEntryPageState.currentWord;
-  String _lexicalCategory = WordEntryPageState.lexicalCategory;
-
-  final _sentencesExample = WordEntryPageState.sentencesExample;
-
   final dbHelper = DBHelper();
+  final apiHelper = ApiHelper();
+
+  static String currentWord = "";
+  static String lexicalCategory = "";
+  final _textController = TextEditingController();
+
+  //get http => null;
 
   @override
   void initState() {
@@ -26,7 +29,7 @@ class SentencesPageState extends State<SentencesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WordEntryPageState.sentencesExample == null
+    return ApiHelper.sentencesExample == null
         ? _buildWaiting()
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,20 +47,59 @@ class SentencesPageState extends State<SentencesPage> {
       child: Column(
         children: <Widget>[
           Text(
-            "$_currentWord",
+            "${ApiHelper.currentWord}",
             style: TextStyle(
               fontSize: 40,
             ),
           ),
-          Text("$_lexicalCategory."),
+          Text("${ApiHelper.lexicalCategory}"),
         ],
       ),
     );
+
+    // return Column(
+    //   children: <Widget>[
+    //     Container(
+    //       padding: EdgeInsets.all(16),
+    //       child: Row(
+    //         children: [
+    //           Flexible(
+    //             child: TextField(
+    //               controller: _textController,
+    //               onSubmitted: _handleSubmitted,
+    //               onChanged: _handleMessageChanged,
+    //               decoration: InputDecoration(
+    //                 hintText: "Search...",
+    //                 contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+    //                 border: OutlineInputBorder(
+    //                   borderRadius: BorderRadius.circular(20),
+    //                 ),
+    //               ),
+    //             ),
+    //           ),
+    //           Container(
+    //             margin: EdgeInsets.symmetric(
+    //               horizontal: 4.0,
+    //             ),
+    //             child: IconButton(
+    //               icon: Icon(Icons.search),
+    //               onPressed: _isComposing
+    //                   ? () =>
+    //                       apiHelper.getDataFromUrl(_textController.text, this)
+    //                   : null,
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     ),
+    //   ],
+    // );
   }
 
   Widget _buildWaiting() {
-    return Center(
-      child: Text("List of sentences.", style: TextStyle(fontSize: 48),),
+    return ColorLoader(
+      radius: 15,
+      dotRadius: 6,
     );
   }
 
@@ -65,9 +107,9 @@ class SentencesPageState extends State<SentencesPage> {
     return Flexible(
       child: Container(
         child: ListView.builder(
-          itemCount: _sentencesExample.length(),
+          itemCount: ApiHelper.sentencesExample.length(),
           itemBuilder: (_, index) => _buildTextRow(
-                _sentencesExample.sentence[index],
+                ApiHelper.sentencesExample.sentence[index],
               ),
         ),
       ),
@@ -99,12 +141,11 @@ class SentencesPageState extends State<SentencesPage> {
     // Blank or red
     print("Fav icon of ${generatedSentence.text}");
     bool isFavorite = false;
-    for (int i = 0; i < HomePageState.favoriteSentences.length; i++) {
-      if (HomePageState.favoriteSentences[i].text == generatedSentence.text) {
+    for (int i = 0; i < DBHelper.favoriteSentences.length; i++) {
+      if (DBHelper.favoriteSentences[i].text == generatedSentence.text) {
         isFavorite = true;
         break;
       }
-      ;
     }
 
     return GestureDetector(
@@ -121,13 +162,12 @@ class SentencesPageState extends State<SentencesPage> {
     print("CLICKED");
     setState(() {
       if (isFavorite) {
-        HomePageState.favoriteSentences.remove(generatedSentence);
+        DBHelper.favoriteSentences.remove(generatedSentence);
         dbHelper.deleteSentence(generatedSentence);
       } else {
-        HomePageState.favoriteSentences.add(generatedSentence);
+        DBHelper.favoriteSentences.add(generatedSentence);
         dbHelper.addNewSentence(generatedSentence);
       }
-      ;
     });
   }
 }

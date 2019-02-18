@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
-
-import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
 import '../main.dart';
 
-import 'package:sentence/model/sentence.dart';
-import 'package:sentence/pages/sentences.dart';
+import 'package:sentence/data/api_helper.dart';
 
 class WordEntryPage extends StatefulWidget {
   WordEntryPageState createState() => WordEntryPageState();
 }
 
 class WordEntryPageState extends State<WordEntryPage> {
-  static SentencesExample sentencesExample;
-
-  static String currentWord = "";
-  static String lexicalCategory = "";
+  final apiHelper = new ApiHelper();
 
   bool _isComposing = false;
   final _textController = TextEditingController();
@@ -76,7 +67,7 @@ class WordEntryPageState extends State<WordEntryPage> {
                 child: IconButton(
                   icon: Icon(Icons.search),
                   onPressed: _isComposing
-                      ? () => _getDataFromUrl(_textController.text)
+                      ? () => _handleSubmitted(_textController.text)
                       : null,
                 ),
               ),
@@ -87,56 +78,13 @@ class WordEntryPageState extends State<WordEntryPage> {
     );
   }
 
-  Future<Null> _getDataFromUrl(text) async {
-    final _app_id = "c078a9d0";
-    final _app_key = "fa8b3145a7f435b135000eb889afba4a";
-
-    var response = await http.get(Uri.encodeFull(_urlWithSentencesOf(text)),
-        headers: {
-          'Accept': 'application/json',
-          'app_id': _app_id,
-          'app_key': _app_key
-        });
-
-    /// Converts JSON to an array
-    var decodedData = json.decode(response.body);
-    print(response.body);
-    print(decodedData['results'][0]['lexicalEntries'][0]);
-
-    MyApp.homePageKey.currentState.tabBarController.animateTo(1);
-
-    sentencesExample = SentencesExample.fromJson(
-        decodedData['results'][0]['lexicalEntries'][0]);
-
-    String curWord = _textController.text;
-    currentWord = curWord[0].toUpperCase() + curWord.substring(1);
-    lexicalCategory =
-        decodedData['results'][0]['lexicalEntries'][0]['lexicalCategory'];
-
-    _textController.clear();
-
-    setState(() {
-      _isComposing = false;
-    });
-  }
-
-  String _urlWithSentencesOf(word) {
-    // Word id is case sensitive and lowercase is required
-    final String language = "en";
-    final wordToLowerCase = word.toLowerCase();
-    return "https://od-api.oxforddictionaries.com:443/api/v1/entries/" +
-        language +
-        "/" +
-        wordToLowerCase +
-        "/sentences";
-  }
-
   void _handleSubmitted(String text) {
-    MyApp.homePageKey.currentState.tabBarController.animateTo(1);
+    apiHelper.getDataFromUrl(_textController.text);
 
-    //_getDataFromUrl(_urlWithSentencesOf(_textController.text));
-    currentWord = _textController.text;
+    ApiHelper.currentWord = text[0].toUpperCase() + text.substring(1);
     _textController.clear();
+
+    MyApp.homePageKey.currentState.tabBarController.animateTo(1);
 
     setState(() {
       _isComposing = false;
